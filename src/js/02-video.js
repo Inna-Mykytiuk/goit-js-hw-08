@@ -12,8 +12,5 @@ player.on(
 );
 
 player
-  .setCurrentTime(localStorage.getItem('videoplayer-current-time'))
-  .catch(function (error) {
-    console.error(error);
-  });
+  .setCurrentTime(localStorage.getItem('videoplayer-current-time') || 0);
 
