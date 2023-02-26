@@ -4,29 +4,26 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 // Change code below this line
 
+// Пошук  порожнього списку для майбутньої галереї
 const gallery = document.querySelector('.gallery');
 
-//Створюємо нову змінну для зберігання всіх об'єктів
+// Створення функції для розмітки галереї
 
-const items = [];
+const makeGalleryMarkup = image => {
+  const { preview, original, description } = image;
 
-galleryItems.forEach(element => {
-  const galleryLink = document.createElement('a');
-  galleryLink.className = 'gallery__link';
-  galleryLink.href = element.original;
+  return `<a class="gallery__item" href="${original}">
+  <img class="gallery__image" src="${preview}" alt="${description}" />
+</a>`;
+};
 
-  const galleryImage = document.createElement('img');
-  galleryImage.className = 'gallery__image';
-  galleryImage.src = element.preview;
-  galleryImage.alt = element.description;
-  galleryImage.setAttribute('title', element.description);
+const makeGallery = galleryItems.map(makeGalleryMarkup).join('');
 
-  galleryLink.append(galleryImage);
-  items.push(galleryLink);
-});
-gallery.append(...items);
+//  Додавання розмітки у список
+gallery.insertAdjacentHTML('afterbegin', makeGallery);
 
-new SimpleLightbox('.gallery a', {
-  captionDelay: 250,
-  animationSpeed: 250,
-});
+// Створення самого лайтбоксу та додавання відображення напису з alt
+new SimpleLightbox('.gallery a', { captionsData: 'alt', captionDelay: 250 });
+// Change code below this line
+
+console.log(galleryItems);

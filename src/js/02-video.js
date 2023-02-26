@@ -2,15 +2,27 @@ import Player from '@vimeo/player';
 import { throttle } from 'lodash';
 
 const iframe = document.querySelector('iframe');
-const player = new Player(iframe);
+const player = new Player(iframe, {
+  loop: true,
+  fullscreen: true,
+  quality: '1080p',
+});
 
+const localStorageKey = 'videoplayer-current-time';
+
+// Відстежування події timeupdate - оновлення часу відтворення
 player.on(
   'timeupdate',
   throttle(e => {
-    localStorage.setItem('videoplayer-current-time', e.seconds);
+    // Збереження часу відтворення у локальне сховище
+    localStorage.setItem(localStorageKey, e.seconds); // Час відтворення оновлюється у сховищі не частіше, ніж раз на секунду
   }, 1000)
 );
 
-player
-  .setCurrentTime(localStorage.getItem('videoplayer-current-time') || 0);
+// Відновлення відтворення зі збереженої позиції під час перезавантаження сторінки.
+// Якщо пустий localStorage - getItem повертає null. Засетиться 0.
 
+const currentTime = localStorage.getItem(localStorageKey);
+if (currentTime) {
+  player.setCurrentTime(currentTime);
+}
